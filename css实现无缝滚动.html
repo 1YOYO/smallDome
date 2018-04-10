@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无缝滚动</title>
+  <style type="text/css">
+    #box{
+      border: 2px solid #000;
+      width: 300px;
+      height: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    #box ul{
+      width: 1000px;
+      position: absolute; /*设置定位，方便动画控制left使其滚动*/
+      top: 0px;
+      left: 0px;
+      animation: move 8s linear 0s infinite normal;  /* 调用动画move */
+    }
+    #box ul:hover{
+    	animation-play-state: paused; /*当鼠标悬浮在ul上暂停动画*/
+    }
+    /*去除ul和li预设的margin和padding*/
+    #box ul, #box ul li{
+      padding: 0px;
+      margin: 0px;
+      list-style-type: none; /*去除li标签预设的·样式*/
+    }
+    #box ul li{
+      float: left; /*因为li是块级元素，将所有li向左浮动，让其紧挨不独占一行*/
+      width: 98px;
+      height: 98px;
+      background-color: pink;
+      color: #fff;
+      margin:1px;
+      text-align: center; /*行级元素（文字）水平居中*/
+      line-height: 98px;  /*行级元素（文字）垂直居中*/
+    }
+
+    /* 设置动画 */
+    @keyframes move{
+		  from{
+		  	left: 0px;
+		  }
+		  to{
+		  	left: -500px;
+		  }
+    }
+  </style>
+</head>
+<body>
+	<div id='box'>
+		<ul>
+      <li><span>假设图片1</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片2</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片3</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片4</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片5</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片1</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片2</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片3</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片4</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片5</span><!-- <img src="" alt=""> --></li>  
+    </ul>
+	</div>
+</body>
+</html>

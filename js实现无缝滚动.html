@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>无缝滚动</title>
+  <style type="text/css">
+    #box{
+      border: 2px solid #000;
+      width: 300px;
+      height: 100px;
+      position: relative;
+      overflow: hidden;
+    }
+    #box ul{
+      width: 1000px;
+      position: absolute; /*设置定位，方便js控制left使其滚动*/
+      top: 0px;
+      left: 0px;
+    }
+    /*去除ul和li预设的margin和padding*/
+    #box ul, #box ul li{
+      padding: 0px;
+      margin: 0px;
+      list-style-type: none; /*去除li标签预设的·样式*/
+    }
+    #box ul li{
+      float: left; /*因为li是块级元素，将所有li向左浮动，让其紧挨不独占一行*/
+      width: 98px;
+      height: 98px;
+      background-color: pink;
+      color: #fff;
+      margin:1px;
+      text-align: center; /*行级元素（文字）水平居中*/
+      line-height: 98px;  /*行级元素（文字）垂直居中*/
+    }
+  </style>
+</head>
+<body>
+	<div id='box'>
+		<ul>
+      <li><span>假设图片1</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片2</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片3</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片4</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片5</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片1</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片2</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片3</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片4</span><!-- <img src="" alt=""> --></li>  
+      <li><span>假设图片5</span><!-- <img src="" alt=""> --></li>  
+    </ul>
+	</div>
+</body>
+  <script>
+    let boxDom = document.querySelectorAll('#box')[0] // 获取#box元素
+    let ulDom = boxDom.children[0]; // 获取ul元素
+    console.log(ulDom);
+    
+    let leftNum = 0; // 此值为left的变量值
+    // 设置定时器
+    let timer = setInterval(function () {
+      leftNum--; // 将left的值不断减1，将其赋值给ul元素的left
+      // num不能一直减下去，需要判断是否到结尾
+      leftNum <= -500 ? leftNum = 0 : leftNum ;
+      // 赋值
+      ulDom.style.left = leftNum + 'px'
+      // 当鼠标放在ul标签时，清除定时器，使leftNum不在减1
+      ulDom.onmouseover = function () {
+        clearInterval(timer)
+      }
+      let selfFunction = arguments.callee // 将本函数赋值给selfFunction供onmouseout调用
+      // 当鼠标从ul标签离开时，在执行执行定时器
+      ulDom.onmouseout = function(){
+        timer = setInterval(selfFunction, 10); //开启定时器 名字还是叫timer
+      }
+    }, 10)
+    }
+  </script>
+</html>
