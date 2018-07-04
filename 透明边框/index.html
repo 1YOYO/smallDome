@@ -35,7 +35,79 @@
 </head>
 <body>
 	<div class='box'>
-		<canvas width='500px' height='300px'></canvas>
+		<canvas width='500px' height='300px' id='textcv'></canvas>
 	</div>
+	<script type="text/javascript" charset="utf-8">
+
+    // 获取canvas上下文
+    var ctxDom = document.getElementById('textcv')
+    var ctx = ctxDom.getContext('2d');
+
+    // 获取画布的宽高
+    var w = ctxDom.width;
+    var h = ctxDom.height;
+
+    // 绘制静态文字
+    ctx.font = '80px Arial';
+    var color_origin = ctx.createLinearGradient(0, 0, w, h);
+    color_origin.addColorStop(0, 'red');
+    color_origin.addColorStop(1, 'blue');
+    ctx.fillStyle = color_origin;
+    ctx.fillText('html Demo', w/7, h/1.8);
+
+    // 复制画布像素点
+    var imgData = ctx.getImageData(0, 0, w, h).data;
+    ctx.clearRect(0, 0, w, h);
+
+    // 查找画布有数值的像素
+    let hasPx = []
+    for (var y = 0; y <= h; y++) {
+      for (var x = 0; x <w; x++) {
+        var idx = (x + y * w) * 4 - 1
+        if (imgData[idx] > 0) {
+          hasPx.push({
+            x: x,
+            y: y
+          })
+        }
+      }
+    }
+    // 用800个点来绘制这几个有像素的点
+    var ctr = 600;
+    var ps = [];
+    
+    for(var i = 0; i < ctr; i++) {
+      var lc = hasPx[Math.floor(Math.random() * hasPx.length)];
+      ps.push({x: lc.x, y: lc.y});
+    }
+    
+    // 重新用多个圆点绘制画布
+    function render(ctx, x, y) {
+      var tx = Math.random() * 2 - 1 + x
+      var ty = -1 + Math.random() * -2 + y
+      let r = 3 + Math.random() * 4
+
+      ctx.save();
+      ctx.fillStyle = 'red';
+      ctx.translate(tx, ty);
+      ctx.scale(0.98, 0.98);
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // 动画-持续燃烧
+    requestAnimationFrame(function loop() {
+      requestAnimationFrame(loop)
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+      ctx.fillRect(0, 0, w, h);
+
+      for (var i = 0; i < ps.length; i++) {
+        render(ctx, ps[i].x, ps[i].y)
+      }
+    });
+  </script>
 </body>
 </html>
