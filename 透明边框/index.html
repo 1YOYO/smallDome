@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		body{
+		  background-color: #000;
+		}
+		/*边框*/
+		.box{
+			margin: 100px auto;
+			width: 504px;
+	    height: 305px;
+	    border-style: solid;
+	    border-width: 32px 37px;
+
+	    border-image-source: url(./border.png);
+	    -ms-border-image-source: url(./border.png);
+	    -o-border-image-source: url(./border.png);
+	    -webkit-border-image-source: url(./border.png);
+
+	    border-image-slice: 32 37 fill;
+	    -ms-border-image-slice: 32 37 fill;
+	    -o-border-image-slice: 32 37 fill;
+	    -webkit-border-image-slice: 32 37 fill;
+
+	    border-image-width: initial;
+	    border-image-outset: initial;
+	    border-image-repeat: initial;
+	    background: none;
+	    color: #fff;
+		}
+	</style>
+</head>
+<body>
+	<div class='box'>
+		<canvas width='500px' height='300px'></canvas>
+	</div>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>书本翻页动态效果</title>
+	<style>
+		body{
+			background-color: #272822;
+			color: #fff;
+			text-align: center;
+			transform-style: preserve-3d;
+    }
+    .desk{
+      display: inline-block;
+      padding:100px 400px;
+      margin: 200px auto;
+      background: url(../img/pagebg.jpg);
+      perspective: 1000;
+			-webkit-perspective: 1000;
+      /*transform: rotateX(-49deg) rotateZ(-59deg) rotateZ(45deg);*/
+		}
+		.book-box{
+			width: 300px;
+			height: 450px;
+			background-color: #E63C5C;
+			position: relative;
+		}
+		.pages{
+			position: absolute;
+	        width: 300px;
+		    height: 450px;		
+		}
+		.pages span{
+			display: inline-block;
+			margin-top: 100px;
+		}
+		.p0{
+			background: #47ABD9;
+			z-index: 0;
+			transform-origin: 0px 0px;
+			transform: translate(575px, 515px) rotate(31deg);
+			transition: .5s;
+			border:1px solid #ccc;
+		}
+		.p1{
+			background: pink;
+			/*z-index: 1;*/
+			top: 299px;
+	    right: 2px;
+			transform-origin: 150px -300px;
+			transform: translate(94px,337px) rotateZ(-31deg);
+			transition: .5s;
+			border:1px solid #ccc;
+		}
+		.zhou{
+			/*border: 1px solid red;*/
+	    width: 800px;
+	    height: 1400px;
+	    position: absolute;
+	    top: -300px;
+	    right: 300px;
+	    transform-origin: 300px 0px;
+	    transform: rotateZ(-31deg);
+	    transition: .5s;
+	    overflow: hidden;
+		}
+		/*.zhou:hover*/
+		.zhou-click{
+			border: 1px solid blue;
+	    width: 800px;
+	    height: 1400px;
+	    position: absolute;
+	    top: -300px;
+	    right: 300px;
+	    transform-origin: 300px 0px;
+	    transform: rotateZ(0deg);
+		}
+		/*.zhou:hover .p1*/
+		.p1-click{
+			top: 299px;
+	    right: 0px;
+			transform-origin: 150px -300px;
+			transform: translate(0px) rotateZ(0deg);
+		}
+		/*.zhou:hover .p0*/
+		.p0-click{
+			transform: translate(800px, 299px) rotate(0deg);
+		}
+	</style>
+</head>
+<body>
+	<div class='desk'>
+		<div class='book-box'>
+			<div class='zhou'>
+		    <div class='pages p0'><span>第6页</span></div>
+		    <div class='pages p1'><span>第7页</span></div>
+		  </div>
+
+	    <div class='zhou'>
+	      <div class='pages p0'><span>第4页</span></div>
+				<div class='pages p1'><span>第5页</span></div>
+			</div>
+
+			<div class='zhou'>
+				<div class='pages p0'><span>第2页</span></div>
+				<div class='pages p1'><span>第3页</span></div>
+			</div>
+
+			<div class='zhou'>
+				<div class='pages p0'><span>小红书</span></div>
+				<div class='pages p1'><span>第1页</span></div>
+			</div>
+			最后一页
+		</div>
+	</div>
+</body>
+  <script
+    src="https://code.jquery.com/jquery-3.3.1.min.js"
+    integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+    crossorigin="anonymous"></script>
+	<script>
+    var list = document.querySelectorAll('.p1')
+    console.log(list)
+    for (let i = 0; i <list.length; i++) {
+      list[i].addEventListener('click', function(e) {
+      	// if (i === (list.length - 1)) {
+      	// 	$(e.path[0]).removeClass('p1-click')
+	      //   let color = parseInt(Math.random() * 982979)
+	      //   $(e.path[0]).css('background', '')
+	      //   $(e.path[1]).removeClass('zhou-click')
+	      //   $(e.path[1]).css('z-index', '')
+	      //   $(e.path[1]).children('.p0').removeClass('p0-click')
+      	// } else {
+	        $(e.path[0]).addClass('p1-click')
+	        let color = parseInt(Math.random() * 982979)
+	        $(e.path[0]).css('background', '#' + color)
+	        $(e.path[1]).addClass('zhou-click')
+	        $(e.path[1]).css('z-index', list.length-i)
+	        $(e.path[1]).children('.p0').addClass('p0-click')
+      	// }
+      })
+    }
+  </script>
+</html>
