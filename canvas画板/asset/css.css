@@ -1,0 +1,130 @@
+/*
+* @Author: YOYO
+* @Date:   2018-07-17 10:03:08
+* @Last Modified by:   YOYO
+* @Last Modified time: 2018-07-17 18:46:08
+*/
+ul, p{
+	margin:0px;
+	padding: 0px;
+}
+.draw-box{
+	width: 900px;
+	height: 700px;
+	border: 1px solid #CCC;
+	background-color: #F5F6F7;
+	margin: 50px auto;
+	border-radius: 10px;
+	overflow: hidden;
+	position: relative;
+}
+#draws{
+	background-color: #CCD6E5;
+	margin-bottom: 10px;
+	cursor: url('./img/Crayon2.png'),auto;
+}
+.tools{
+	position: absolute;
+	bottom:0px;
+	left: 0px;
+	width: 99%;
+	height: 165px;
+	padding: 5px;
+	border:1px solid #fff;
+	background-color: #F5F6F7;
+	transition: 1s;
+}
+.toolshidden{
+	bottom: -177px;
+}
+.tools .arrowTop{
+  width: 0px;
+  height: 0px;
+  position: absolute;
+  top: -40px;
+  left:50%;
+  margin-left: -10px;
+  border: 20px solid transparent;
+  border-bottom-color: #F5F6F7;
+  cursor: pointer;
+}
+.tools .btn{
+	border: 1px solid #fff;
+	width: 100px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	margin: 0 auto;
+	border-radius: 5px;
+	color: #fff;
+	background-color: #CCD6E5;
+}
+.tool-items{
+	margin-top: 10px;
+	border: 1px solid red;
+	height: 110px;
+}
+.tool-items li {
+	display: inline-block;
+}
+.tool-items .tool-title{
+  text-align: center;
+  font-size: 13px;
+}
+.tool-items .tool-color{
+	border: 1px solid #E2E3E4;
+	width: 240px;
+	height: 100px;
+	vertical-align: top;
+}
+.colorArr, .shapeArr{
+	width: 100%;
+	padding: 2px;
+}
+.colorArr .color-item, .shapeArr .shape-item{
+  float: left;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  border: 1px solid #A0A0A0;
+  margin: 2px;
+  background-clip: content-box;
+  padding: 1px;
+  text-align: center;
+}
+.colorArr .color-item.active, .shapeArr .shape-item.active{
+  border: 1px solid #62A2E4;
+  box-shadow: 0px 0px 10px 2px #62A2E4;
+}
+.tool-items .tool-color.line{
+	width: 80px;
+	padding: 0px 5px;
+}
+.tool-items .tool-color.line .lines{
+	height: 4px;
+	padding: 5px 2px;
+	border: 1px solid transparent;
+}
+.tool-items .tool-color.line .lines.active{
+	border: 1px solid #62A2E4;
+}
+.tool-items .tool-color.line .lines span{
+  border-top: 1px solid red;
+  display: block;
+}
+.tool-items .tool-color.line .lines1 span{
+  border-top: 2px solid red;
+  display: block;
+}
+.tool-items .tool-color.line .lines2 span{
+  border-top: 3px solid red;
+  display: block;
+}
+.tool-items .tool-color.line .lines3 span{
+  border-top: 4px solid red;
+  display: block;
+}
+.tool-items .tool-color.line .lines4 span{
+  border-top: 5px solid red;
+  display: block;
+}

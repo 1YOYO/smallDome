@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>画板</title>
+	<link rel="stylesheet" type="text/css" href="asset/css.css">
+	<script src="asset/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+	<div class='draw-box'>
+		<canvas id='draws' width="900px" height="700px"></canvas>
+		<div class='tools'>
+			<span class='arrowTop'></span>
+			<div class='btn'>开始绘画</div>
+			<ul class='tool-items'>
+				<li class='tool-color'>
+					<p class='tool-title'>颜色</p>
+					<div class='colorArr'></div>
+				</li>
+				<!-- <li class='tool-color'>
+					<p class='tool-title'>形状</p>
+					<div class='shapeArr'></div>
+				</li> -->
+				<li class='tool-color line'>
+					<p class='tool-title'>线条</p>
+					<div class='lineArr'>
+						<p class='lines' data-line=0><span data-line=0></span></p>
+						<p class='lines lines1' data-line=1><span data-line=1></span></p>
+						<p class='lines lines2' data-line=2><span data-line=2></span></p>
+						<p class='lines lines3' data-line=3><span data-line=3></span></p>
+						<p class='lines lines4' data-line=4><span data-line=4></span></p>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<script src="asset/js.js" type="text/javascript" charset="utf-8"></script>
+</body>
+</html>

@@ -10,6 +10,7 @@
       height: 100px;
       position: relative;
       overflow: hidden;
+      margin: 400px auto;
     }
     #box ul{
       width: 1000px;
@@ -54,16 +55,15 @@
   <script>
     let boxDom = document.querySelectorAll('#box')[0] // 获取#box元素
     let ulDom = boxDom.children[0]; // 获取ul元素
-    console.log(ulDom);
     
     let leftNum = 0; // 此值为left的变量值
     // 设置定时器
     let timer = setInterval(function () {
-      leftNum--; // 将left的值不断减1，将其赋值给ul元素的left
+      leftNum --; // 将left的值不断减1，将其赋值给ul元素的left
       // num不能一直减下去，需要判断是否到结尾
       leftNum <= -500 ? leftNum = 0 : leftNum ;
-      // 赋值
       ulDom.style.left = leftNum + 'px'
+      // 赋值
       // 当鼠标放在ul标签时，清除定时器，使leftNum不在减1
       ulDom.onmouseover = function () {
         clearInterval(timer)
@@ -74,6 +74,5 @@
         timer = setInterval(selfFunction, 10); //开启定时器 名字还是叫timer
       }
     }, 10)
-    }
   </script>
 </html>

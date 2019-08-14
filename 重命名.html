@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>重命名</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<style>
+		ul, li {
+			margin: 0px;
+			padding: 0px;
+			list-style: none;
+			margin-top: 10px;
+		}
+		span{
+			width: 18px;
+			height: 18px;
+			border-radius: 2px;
+			display: inline-block;
+			border: 1px solid #ccc;
+			vertical-align: middle;
+			margin-right: 5px;
+			text-align: center;
+			line-height: 14px;
+		}
+		span.active{
+      width: 8px;
+			height: 8px;
+			background: red;
+			border-radius: 50%;
+		}
+		input{
+			border: none;
+		}
+		input:focus{
+			outline: none;
+		}
+		.actives{
+			border: 1px solid #ccc;
+		}
+	</style>
+</head>
+<body>
+	<div id='app'>
+		<button @click='btnClick'>{{btn}}</button>
+		<p> </p>
+		<br>
+		<ul>
+			<li v-for='(list, index) in listData' :key='index' @click='inputclick(list, index)'>
+				<span><span v-show='list.selected' class='active'></span></span>
+				<input type="text" v-model='list.name' :class='{actives: list.selected}'>
+			</li>
+		</ul>
+	</div>
+</body>
+<script>
+	var app = new Vue({
+	  el: '#app',
+	  data: {
+		  btn: '重命名',
+	    listData: [
+	    	{name: '西瓜', selected: false},
+	    	{name: '葡萄', selected: false},
+	    	{name: '车厘子', selected: false},
+	    	{name: '香蕉', selected: false},
+	    	{name: '百香果', selected: false},
+	    	{name: '火龙果', selected: false},
+	    	{name: '山竹', selected: false},
+	    	{name: '芒果', selected: false}
+	    ]
+	  },
+	  methods: {
+	  	// 点击li标签的函数，第一个参数代表传进去的listData中被点击的元素，第二个表示被点击的listData的下标
+	  	// 是一个val和index
+	  	inputclick: function (val, index) {
+	  		let self = this
+	  		this.listData.forEach( function(ele, i) {
+	  			// 这里面的是循环的this.listData里的值和下标，是多个ele和index的值
+	  			// 功能是实现单选，在选择前将所有被选中的值设置为false，也就是将所有被打钩的钩都去掉
+	  			self.listData[i].selected = false
+	  		});
+	  		// 将当前被点击的也就是被选中的值设置为true，来显示一个打钩状态
+	  		this.listData[index].selected = true
+	  	},
+	  	btnClick: function () {
+	  		this.listData.forEach( function(val, index) {
+	  			if (val.selected) {
+		  			var Domlist = document.getElementsByTagName('li')[index].getElementsByTagName('input')[0];
+		  			Domlist.select()
+	  			}
+	  		});
+	  	}
+	  },
+	  created () {
+	  	let p = document.getElementsByTagName('p')[0]
+	  	console.log(p.firstChild)
+	  	p.firstChild.nodeValue = '你好'
+	  }
+	})
+</script>
+</html>

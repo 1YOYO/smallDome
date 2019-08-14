@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Three框架</title>
+		<script src="./js/three.min.js"></script>
+		<script src="./js/controls/OrbitControls.js"></script>
+		<script src="./js/loader/ColladaLoader.js"></script>
+		<script src="./js/loader/FBXLoader.js"></script>
+		<style type="text/css"></style>
+	</head>
+	<style>
+		html, body {
+	    margin: 0;
+	    height: 100%;
+		}
+		#c {
+		  width: 100%;
+		  height: 100%;
+		  display: block;
+		}
+	</style>
+
+	<body>
+		<canvas id="c"></canvas>
+	</body>
+	<script>
+	  let renderer, camera, scene, cube, bgMesh;
+    
+    // 初始化场景
+		function init () {
+			const canvas = document.querySelector('#c');
+		  renderer = new THREE.WebGLRenderer({canvas});
+		  // renderer.autoClearColor = false;
+
+			camera = new THREE.PerspectiveCamera(75, 2, 0.1, 300);
+		  camera.position.z = 2;
+			// camera = new THREE.PerspectiveCamera(75, 2, 0.1, 4000);
+		 //  camera.position.z = 2000;
+
+			// 控制模型的平移、旋转、缩放
+			const controls = new THREE.OrbitControls(camera, canvas);
+		  controls.target.set(0, 0, 0);
+		  controls.update();
+
+			scene = new THREE.Scene()
+
+			const light = new THREE.DirectionalLight(0xFFFFFF, 1)
+			// const light = new THREE.AmbientLight(0xFFFFFF)
+			light.position.set(-1, 4, 4);
+			scene.add(light)
+		}
+
+		// 模型
+		let fs;
+		function model () {
+			let daeLoader = new THREE.ColladaLoader();
+			daeLoader.load('./model/fs.dae', (collade) => {
+				fs = collade.scene
+				let names = {
+					'group_0': '风叶',
+					'group_1': '按钮',
+					'group_3': '风扇壳'
+				}
+				fs.children[0].children.forEach(obj => {
+					obj.name = names[obj.name]
+				})
+				scene.add(fs)
+			})
+
+		}
+
+		// 渲染
+		function render () {
+
+			if (resizeRendererToDisplaySize(renderer)) {
+				const canvas = renderer.domElement;
+				camera.aspect = canvas.clientWidth / canvas.clientHeight;
+				camera.updateProjectionMatrix()
+			}
+			// 旋转缩放时，改变物体的位置
+			// bgMesh.position.copy(camera.position);
+			// if (fy) {
+			// 	fy.rotation.y += 0.2
+			// }
+			renderer.render(scene, camera)
+			requestAnimationFrame(render)
+		}
+
+		init()
+		model()
+		render()
+
+	  function resizeRendererToDisplaySize(renderer) {
+		  const canvas = renderer.domElement;
+		  const width = canvas.clientWidth;
+		  const height = canvas.clientHeight;
+		  const needResize = canvas.width !== width || canvas.height !== height;
+		  if (needResize) {
+		    renderer.setSize(width, height, false);
+		  }
+		  return needResize;
+		}
+
+    // 点击事件
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    let open = false
+		window.addEventListener('click', (e) => {
+			mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+			mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+			// 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+			raycaster.setFromCamera(mouse, camera);
+
+			// 获取raycaster直线和所有模型相交的数组集合
+			var intersects = raycaster.intersectObjects(scene.children, true);
+			intersects.forEach(({ object }) => {
+				console.log(1111, object.name)
+				if (object.name == '按钮' || object.parent.name == '按钮') {
+					open = !open
+					fs.children[0].children.forEach(obj => {
+						if(obj.name == "风叶") {
+							rotating(obj, open)
+						}
+					})
+				}
+			})
+		})
+
+		let timmer = null;
+		function rotating (obj, open) {
+			if (open) {
+				timmer = setInterval(() => {
+					obj.rotation.y += 1
+				}, 10);
+			} else {
+				clearInterval(timmer);
+			}
+		}
+	</script>
+</html>
