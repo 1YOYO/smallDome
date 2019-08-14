@@ -1,0 +1,22 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+
+newmtl rust
+Ka 0.000000 0.000000 0.000000
+Kd 0.631373 0.356863 0.203922
+Ks 0.330000 0.330000 0.330000
+map_Kd 沙发/rust.jpg
+
+newmtl seared_oak
+Ka 0.000000 0.000000 0.000000
+Kd 0.223529 0.188235 0.164706
+Ks 0.330000 0.330000 0.330000
+map_Kd 沙发/seared_oak.jpg
+
+newmtl rubber
+Ka 0.000000 0.000000 0.000000
+Kd 0.117647 0.117647 0.117647
+Ks 0.330000 0.330000 0.330000
+map_Kd 沙发/rubber.jpg
+
