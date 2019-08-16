@@ -30,7 +30,7 @@
     // 初始化场景
 		function init () {
 			const canvas = document.querySelector('#c');
-		  renderer = new THREE.WebGLRenderer({canvas});
+		  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 		  // renderer.autoClearColor = false;
 
 			camera = new THREE.PerspectiveCamera(75, 2, 0.1, 300);
@@ -46,8 +46,8 @@
 			scene = new THREE.Scene()
 
 			const light = new THREE.DirectionalLight(0xFFFFFF, 1)
-			// const light = new THREE.AmbientLight(0xFFFFFF)
 			light.position.set(-1, 4, 4);
+			// const light1 = new THREE.AmbientLight(0xB89494)
 			scene.add(light)
 		}
 
@@ -55,19 +55,22 @@
 		let fs;
 		function model () {
 			let daeLoader = new THREE.ColladaLoader();
-			daeLoader.load('./model/fs.dae', (collade) => {
+			daeLoader.load('./model/fsLight.dae', (collade) => {
 				fs = collade.scene
 				let names = {
 					'group_0': '风叶',
 					'group_1': '按钮',
-					'group_3': '风扇壳'
+					'group_3': '灯',
+					'group_4': '风扇壳'
 				}
-				fs.children[0].children.forEach(obj => {
-					obj.name = names[obj.name]
+				fs.children[0].children.forEach(child => {
+					child.name = names[child.name]
 				})
+				// fs.traverse((child) => {
+					// console.log(1, child)
+				// })
 				scene.add(fs)
 			})
-
 		}
 
 		// 渲染
@@ -91,7 +94,7 @@
 		model()
 		render()
 
-	  function resizeRendererToDisplaySize(renderer) {
+	  function resizeRendererToDisplaySize (renderer) {
 		  const canvas = renderer.domElement;
 		  const width = canvas.clientWidth;
 		  const height = canvas.clientHeight;
@@ -116,18 +119,22 @@
 			// 获取raycaster直线和所有模型相交的数组集合
 			var intersects = raycaster.intersectObjects(scene.children, true);
 			intersects.forEach(({ object }) => {
-				console.log(1111, object.name)
+
 				if (object.name == '按钮' || object.parent.name == '按钮') {
 					open = !open
-					fs.children[0].children.forEach(obj => {
-						if(obj.name == "风叶") {
-							rotating(obj, open)
+					fs.traverse((child) => {
+					  // console.log(child)
+						if(child.name == "风叶") {
+							rotating(child, open)
+						}
+						if(child.name == "灯") {
+							fsLight(child, open)
 						}
 					})
 				}
 			})
 		})
-
+		// 转动或停止风叶
 		let timmer = null;
 		function rotating (obj, open) {
 			if (open) {
@@ -136,6 +143,15 @@
 				}, 10);
 			} else {
 				clearInterval(timmer);
+			}
+		}
+		// 打开或关闭风扇指示灯
+		function fsLight (obj, open) {
+			// console.log(111, obj)
+			if (open) {
+				obj.material.emissive.set(0xFFFFFF)
+			} else {
+				obj.material.emissive.set(0xFF0000)
 			}
 		}
 	</script>
