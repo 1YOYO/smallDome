@@ -7,6 +7,7 @@
 		<script src="./js/controls/OrbitControls.js"></script>
 		<script src="./js/loader/ColladaLoader.js"></script>
 		<script src="./js/loader/FBXLoader.js"></script>
+		<script src="./js/transition.js"></script>
 		<style type="text/css"></style>
 	</head>
 	<style>
@@ -136,22 +137,52 @@
 		})
 		// 转动或停止风叶
 		let timmer = null;
+		let stopTimmer = null;
+		let speed = 0
 		function rotating (obj, open) {
+			const tr = transition.transition
 			if (open) {
-				timmer = setInterval(() => {
-					obj.rotation.y += 1
-				}, 10);
+				const state = tr('linear', 0, 1, 500)
+
+				openAnimation(obj, state)
 			} else {
-				clearInterval(timmer);
+				cancelAnimationFrame(timmer);
+				const state = tr('linear', speed, 0, 100)
+				stopAnimation(obj, state)
 			}
 		}
+		function openAnimation (obj, state = []) {
+			let currentStateIncrement = 1
+
+			if (state.length !== 0) currentStateIncrement = state.splice(0, 1)[0]
+			console.log(currentStateIncrement)
+
+			obj.rotation.y += currentStateIncrement
+
+			speed = currentStateIncrement
+
+			timmer = requestAnimationFrame(openAnimation.bind(this, obj, state))
+		}
+
+		function stopAnimation (obj, state = []) {
+			let currentStateIncrement = state.splice(0, 1)[0];
+			console.log(currentStateIncrement)
+
+			if (!state.length) {
+				cancelAnimationFrame(stopTimmer);
+				return
+			}
+			obj.rotation.y += currentStateIncrement
+			stopTimmer = requestAnimationFrame(stopAnimation.bind(this, obj, state))
+		}
+
 		// 打开或关闭风扇指示灯
 		function fsLight (obj, open) {
 			// console.log(111, obj)
 			if (open) {
 				obj.material.emissive.set(0xFFFFFF)
 			} else {
-				obj.material.emissive.set(0xFF0000)
+				obj.material.emissive.set(0xB59191)
 			}
 		}
 	</script>
