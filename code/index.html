@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>東方世纪</title>
+    <script src='js/three.min.js'></script>
+    <script src='js/OrbitControls.js'></script>
+    <script src='js/ColladaLoader.js'></script>
+    <script src="./js/transition.js"></script>
+    <style>
+			html, body {
+		    margin: 0;
+		    height: 100%;
+			}
+			body {
+				background: url('./image/timg (1).jpg');
+			}
+			#home {
+			  width: 100%;
+			  height: 100%;
+			  display: block;
+			}
+		</style>
+  </head>
+  <body>
+    <canvas id="home"></canvas> 
+  </body>
+
+  <script>
+	  {
+	  	// 全局变量
+	  	let  renderer, camera, scene
+	  }
+ 	   
+ 	  // 初始化场景
+  	function init () {
+  		clock = new THREE.Clock();
+
+			const canvas = document.querySelector('#home');
+		  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+			renderer.setClearAlpha(0.2);
+		  // renderer.autoClearColor = false;
+
+			camera = new THREE.PerspectiveCamera(75, 2, 0.01, 30);
+			camera.position.set(-0.3, 0.2, 0.5);
+		  // camera.position.z = 1;
+
+			// 控制模型的平移、旋转、缩放
+			const controls = new THREE.OrbitControls(camera, canvas);
+		  controls.target.set(0, 0, 0);
+		  controls.update();
+
+			scene = new THREE.Scene()
+
+			// 灯光
+			const light = new THREE.PointLight(0xFFFFFF, 0.8)
+			const light1 = new THREE.PointLight(0xFFFFFF, 0.8)
+			const light2 = new THREE.PointLight(0xFFFFFF, 0.8)
+			const light3 = new THREE.PointLight(0xFFFFFF, 0.8)
+			const light4 = new THREE.SpotLight(0xFFFFFF, 0.8)
+			// const light5 = new THREE.SpotLight(0xFFFFFF, 0.5)
+			light.position.set(-3.5, -6, 2);
+			light1.position.set(-3.5, 6, 2);
+			light2.position.set(3.5, 6, 2);
+			light3.position.set(3.5, -6, 2);
+			light4.position.set(0, 0, -2);
+			// light5.position.set(0, 0, -1);
+			// const light = new THREE.AmbientLight(0xFFFFFD)
+			scene.add(light)
+			scene.add(light1)
+			scene.add(light2)
+			scene.add(light3)
+			scene.add(light4)
+			// scene.add(light5)
+		}
+
+		// 模型
+		let service;
+		function model () {
+			let daeLoader = new THREE.ColladaLoader();
+			daeLoader.load('./module/service-easy.dae', (collade) => {
+				service = collade.scene
+				scene.add(service)
+
+				const box = new THREE.Box3().setFromObject(service);
+				const boxSize = box.getSize(new THREE.Vector3()).length();
+				const boxCenter = box.getCenter(new THREE.Vector3());
+				console.log(boxSize);
+				console.log(boxCenter);
+
+			})
+		}
+
+		// 矫正场景的宽高比例
+	  function resizeRendererToDisplaySize (renderer) {
+		  const canvas = renderer.domElement;
+		  const width = canvas.clientWidth;
+		  const height = canvas.clientHeight;
+		  const needResize = canvas.width !== width || canvas.height !== height;
+		  if (needResize) {
+		    renderer.setSize(width, height, false);
+		  }
+		  return needResize;
+		}
+
+
+		function render () {
+			if (resizeRendererToDisplaySize(renderer)) {
+				const canvas = renderer.domElement;
+				camera.aspect = canvas.clientWidth / canvas.clientHeight;
+				camera.updateProjectionMatrix()
+			}
+
+			renderer.render(scene, camera)
+			requestAnimationFrame(render)
+		}
+
+		init()
+		model()
+		render()
+
+  </script>
+</html>
