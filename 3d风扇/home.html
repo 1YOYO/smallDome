@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Three框架</title>
+		<script src="./js/three.min.js"></script>
+		<script src="./js/controls/OrbitControls.js"></script>
+		<script src="./js/loader/ColladaLoader.js"></script>
+		<script src="./js/loader/FBXLoader.js"></script>
+		<script src="./js/transition.js"></script>
+		<style type="text/css"></style>
+	</head>
+	<style>
+		html, body {
+	    margin: 0;
+	    height: 100%;
+		}
+		#c {
+		  width: 100%;
+		  height: 100%;
+		  display: block;
+		}
+	</style>
+
+	<body>
+		<canvas id="c"></canvas>
+	</body>
+	<script>
+		// 自定义贝塞尔曲线缓冲效果
+		const curveName = 'stopLinner';
+		const bezierCurve = [[[0.000, 1.000]],[[0.450, 0.192], [0.124, 0.516], [0.668, -0.040]],[[1.000, 0.000]]];
+		transition.injectNewCurve(curveName, bezierCurve)
+
+		// three.js全局变量
+	  let renderer, camera, scene, cube, bgMesh;
+    
+    // 初始化场景
+		function init () {
+			const canvas = document.querySelector('#c');
+		  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+		  // renderer.autoClearColor = false;
+
+			camera = new THREE.PerspectiveCamera(75, 2, 0.1, 3000);
+		  camera.position.x = 8;
+		  camera.position.y = 8;
+		  camera.position.z = 8;
+
+			// 控制模型的平移、旋转、缩放
+			const controls = new THREE.OrbitControls(camera, canvas);
+		  controls.target.set(0, 0, 0);
+		  controls.update();
+
+			scene = new THREE.Scene()
+
+			const light = new THREE.DirectionalLight(0xFFFFFF, 1)
+			const light1 = new THREE.DirectionalLight(0xFFFFFF, 0.5)
+			const light2 = new THREE.DirectionalLight(0xFFFFFF, 0.5)
+			light.position.set(-8, 8, 8);
+			light1.position.set(-8, 10, -8);
+			light2.position.set(100, 80, 30);
+			// const light1 = new THREE.AmbientLight(0xB89494)
+			scene.add(light)
+			scene.add(light1)
+			scene.add(light2)
+		}
+
+		// 模型
+		let fs;
+		function model () {
+			let daeLoader = new THREE.ColladaLoader();
+			daeLoader.load('./model/home.dae', (collade) => {
+				fs = collade.scene
+				// let names = {
+				// 	'group_0': '风叶',
+				// 	'group_1': '按钮',
+				// 	'group_3': '灯',
+				// 	'group_4': '风扇壳'
+				// }
+				// fs.children[0].children.forEach(child => {
+				// 	child.name = names[child.name]
+				// })
+				scene.add(fs)
+			})
+		}
+
+		// 渲染
+		function render () {
+			if (resizeRendererToDisplaySize(renderer)) {
+				const canvas = renderer.domElement;
+				camera.aspect = canvas.clientWidth / canvas.clientHeight;
+				camera.updateProjectionMatrix()
+			}
+
+			renderer.render(scene, camera)
+			requestAnimationFrame(render)
+		}
+
+		init()
+		model()
+		render()
+
+		// 矫正场景的宽高比例
+	  function resizeRendererToDisplaySize (renderer) {
+		  const canvas = renderer.domElement;
+		  const width = canvas.clientWidth;
+		  const height = canvas.clientHeight;
+		  const needResize = canvas.width !== width || canvas.height !== height;
+		  if (needResize) {
+		    renderer.setSize(width, height, false);
+		  }
+		  return needResize;
+		}
+
+    // 点击事件
+    var raycaster = new THREE.Raycaster();
+    var mouse = new THREE.Vector2();
+    let open = false // 控制按钮是开还是关
+
+		window.addEventListener('click', (e) => {
+			mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+			mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+			// 通过鼠标点的位置和当前相机的矩阵计算出raycaster
+			raycaster.setFromCamera(mouse, camera);
+
+			// 获取raycaster直线和所有模型相交的数组集合
+			var intersects = raycaster.intersectObjects(scene.children, true);
+			intersects.forEach(({ object }) => {
+
+				if (object.name == '按钮' || object.parent.name == '按钮') {
+					open = !open
+					fs.traverse((child) => {
+						child.name == "风叶" && rotating(child, open)
+						child.name == "灯" && fsLight(child, open)
+					})
+				}
+			})
+		})
+
+		// 转动或停止风叶的函数
+		let timmer = null;
+		let stopTimmer = null;
+		let speed = 0
+		function rotating (obj, open) {
+			const tr = transition.transition
+
+			if (open) {
+				const state = tr('linear', 0, 1, 500)
+
+				openAnimation(obj, state)
+
+			} else {
+
+				cancelAnimationFrame(timmer);
+				const state = tr('stop', speed, 0, 60)
+				stopAnimation(obj, state)
+
+			}
+
+		}
+		// 开启循环的函数
+		function openAnimation (obj, state = []) {
+			let currentStateIncrement = 1
+
+			if (state.length !== 0) currentStateIncrement = state.splice(0, 1)[0]
+
+			obj.rotation.y += currentStateIncrement
+
+			speed = currentStateIncrement
+
+			timmer = requestAnimationFrame(openAnimation.bind(this, obj, state))
+		}
+
+		// 关闭循环的函数
+		function stopAnimation (obj, state = []) {
+			let currentStateIncrement = state.splice(0, 1)[0];
+			// console.log(currentStateIncrement)
+
+			if (!state.length) {
+				cancelAnimationFrame(stopTimmer);
+				return
+			}
+			obj.rotation.y += currentStateIncrement
+			stopTimmer = requestAnimationFrame(stopAnimation.bind(this, obj, state))
+		}
+
+		// 打开或关闭风扇指示灯
+		function fsLight (obj, open) {
+			// console.log(111, obj)
+			if (open) {
+				obj.material.emissive.set(0xFFFFFF)
+			} else {
+				obj.material.emissive.set(0xB59191)
+			}
+		}
+	</script>
+</html>
